@@ -97,6 +97,8 @@ resistset$patient_id <- gsub(" ", "", tmp5)
 #write_rds(resistset, "../output/resistset-sep-fselect-frma-loess.rds")
 ```
 
+#### RAW
+
 ``` r
 batchEffectDists <- function(mtx_input){
     #arrange
@@ -124,6 +126,8 @@ batchEffectDists <- function(mtx_input){
 batchEffectDists(exprs(resistset))
 ```
 
+<img src="normalisation-batch-correction_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
+
 ``` r
 batchEffectMDS <- function(mtx_input, colour_by){
     #arrange
@@ -138,12 +142,31 @@ batchEffectMDS <- function(mtx_input, colour_by){
 }
 
 batchEffectMDS(exprs(resistset), "batch")
+```
+
+<img src="normalisation-batch-correction_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
+
+``` r
 batchEffectMDS(exprs(resistset), "timepoint")
+```
+
+<img src="normalisation-batch-correction_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-2.png" style="display: block; margin: auto;" />
+
+``` r
 batchEffectMDS(exprs(resistset), "patient_id") + theme(legend.position = 'none')
 ```
 
+<img src="normalisation-batch-correction_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-3.png" style="display: block; margin: auto;" />
+
+#### Post-ComBat
+
 ``` r
 mtx_cb <- ComBat(exprs(resistset), batch = as.numeric(resistset$batch))
+```
+
+    ## Standardizing Data across genes
+
+``` r
 resistset_cb <- resistset
 exprs(resistset_cb) <- mtx_cb
 #write_rds(resistset_cb, "../output/resistset-sep-fselect-frma-loess-cb.rds")
@@ -151,11 +174,27 @@ exprs(resistset_cb) <- mtx_cb
 
 ``` r
 batchEffectDists(exprs(resistset_cb))
+```
 
+<img src="normalisation-batch-correction_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
+
+``` r
 batchEffectMDS(exprs(resistset_cb), "batch")
+```
+
+<img src="normalisation-batch-correction_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-2.png" style="display: block; margin: auto;" />
+
+``` r
 batchEffectMDS(exprs(resistset_cb), "timepoint")
+```
+
+<img src="normalisation-batch-correction_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-3.png" style="display: block; margin: auto;" />
+
+``` r
 batchEffectMDS(exprs(resistset_cb)[, !is.na(resistset_cb$timepoint)], "patient_id") + theme(legend.position = 'none')
 ```
+
+<img src="normalisation-batch-correction_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-12-4.png" style="display: block; margin: auto;" />
 
 ``` r
 raw_pre <- resistset[, which(resistset$timepoint == "pre")]
@@ -186,3 +225,5 @@ ggplot(cor_dfr, aes(x = class, y = cor)) + geom_boxplot(outlier.size = 0) +
     facet_wrap(~correction, nrow = 1) +
     theme_pander()
 ```
+
+<img src="normalisation-batch-correction_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-13-1.png" style="display: block; margin: auto;" />

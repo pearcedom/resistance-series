@@ -109,7 +109,9 @@ resistset$patient_id <- gsub(" ", "", tmp5)
 resistset <- read_rds("../output/resistset-sep-fselect-frma-loess.rds")
 ```
 
-```{r}
+#### RAW
+
+```{r, eval = TRUE}
 batchEffectDists <- function(mtx_input){
     #arrange
     resist_mlt <- melt(mtx_input)
@@ -136,7 +138,7 @@ batchEffectDists <- function(mtx_input){
 batchEffectDists(exprs(resistset))
 ```
 
-```{r}
+```{r, eval = TRUE}
 batchEffectMDS <- function(mtx_input, colour_by){
     #arrange
     mv500 <- mostVar(mtx_input, 500) %>% row.names()
@@ -154,14 +156,16 @@ batchEffectMDS(exprs(resistset), "timepoint")
 batchEffectMDS(exprs(resistset), "patient_id") + theme(legend.position = 'none')
 ```
 
-```{r}
+#### Post-ComBat
+
+```{r, eval = TRUE}
 mtx_cb <- ComBat(exprs(resistset), batch = as.numeric(resistset$batch))
 resistset_cb <- resistset
 exprs(resistset_cb) <- mtx_cb
 #write_rds(resistset_cb, "../output/resistset-sep-fselect-frma-loess-cb.rds")
 ```
 
-```{r}
+```{r, eval = TRUE}
 batchEffectDists(exprs(resistset_cb))
 
 batchEffectMDS(exprs(resistset_cb), "batch")
@@ -169,7 +173,7 @@ batchEffectMDS(exprs(resistset_cb), "timepoint")
 batchEffectMDS(exprs(resistset_cb)[, !is.na(resistset_cb$timepoint)], "patient_id") + theme(legend.position = 'none')
 ```
 
-```{r}
+```{r, eval = TRUE}
 raw_pre <- resistset[, which(resistset$timepoint == "pre")]
 raw_post <- resistset[, which(resistset$timepoint == "post")]
 cb_pre <- resistset_cb[, which(resistset_cb$timepoint == "pre")]
