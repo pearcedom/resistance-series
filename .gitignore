@@ -1,0 +1,15 @@
+*.Rds
+*.rds
+*.rda
+*.Rda
+*.html
+*.txt
+*.csv
+*.xlsx
+*.CEL
+*.cel
+*.pdf
+*DS*
+*.db
+.vscode
+.swp
